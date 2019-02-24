@@ -1,0 +1,7 @@
+keyring
+pytz
+ruamel.yaml
+click
+pyrfc3339
+pyotp
+awscli
