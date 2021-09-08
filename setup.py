@@ -1,36 +1,38 @@
-#!/usr/bin/env python3.6
+#!/usr/bin/env python3
+# type: ignore
 
-import os
-import sys
+from setuptools import setup, find_packages
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    print("Please install setuptools.")
-    sys.exit(1)
+# TODO: check python version before allowing install.
 
-if sys.version_info < (3, 6):
-    sys.exit("Sorry, Python < 3.6 is not supported")
-
-version_raw = os.environ.get("VERSION", None)
-if version_raw is None:
-    version_raw = open("VERSION").read()
-
-version = version_raw.split("-")
-
-pypi_version = version[0] + "+" + ".".join(version[1:])
-
-print("Setting package version to:", pypi_version.strip())
+# Read the requirements out of requirements.txt which makes more tools happy.
+install_requires = []
+with open("requirements.txt", "rt") as f:
+    for line in f:
+        if line == "":
+            continue
+        if line.startswith("#"):
+            continue
+        if line.startswith("-") or line.startswith("--"):
+            continue
+        split_line = line.split()
+        if len(split_line) > 0:
+            install_requires.append(split_line[0])
 
 setup(
-    name="teg-aws",
-    version=pypi_version,
-    description="TEG AWS Tools",
-    author="Will Rouesnel",
-    author_email="william.rouesnel@ticketek.com.au",
-    url="",
-    install_requires=["structlog","keyring","pytz","ruamel.yaml","click","pyrfc3339", "pyotp","awscli"],
-    packages=find_packages("."),
-    package_data={"": ["VERSION"]},
-    entry_points={"console_scripts": ["teg-aws=teg_aws.__main__:main"]},
+    name="aws_sso",
+    version="0.0.0",
+    description="AWS SSO Portal Helper",
+    author="Will Rouesnel <wrouesnel@wrouesnel.com>",
+    py_modules=find_packages("."),
+    setup_requires=[],
+    install_requires=install_requires,
+    include_package_data=True,
+    classifiers=[
+        "License :: Other/Proprietary License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+    ],
+    entry_points={"console_scripts": ["aws-sso=aws_sso.cmd.aws_sso.__main__:main",],},
 )

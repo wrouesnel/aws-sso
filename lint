@@ -1,0 +1,50 @@
+#!/bin/bash
+# See: https://stackoverflow.com/questions/59895/how-to-get-the-source-directory-of-a-bash-script-from-within-the-script-itself
+# Note: you can't refactor this out: its at the top of every script so the scripts can find their includes.
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+
+source "${SCRIPT_DIR}/include.sh"
+source "${SCRIPT_DIR}/activate"
+
+function do_fmt() {
+  # Format all by default.
+  if [ -z "$1" ]; then
+      exec black "."
+  else
+      exec black "$@"
+  fi
+}
+
+function do_lint() {
+  exec flake8 "$@"
+}
+
+function do_typecheck() {
+  if [ -z "$1" ]; then
+    exec mypy "-p" "blackbox_poller"
+  else
+    exec mypy "$@"
+  fi
+}
+
+mode="$1"
+shift
+
+case "$mode" in
+  fmt)
+    do_fmt "$@"
+    ;;
+  lint)
+    do_lint "$@"
+    ;;
+  types)
+    do_typecheck "$@"
+    ;;
+
+esac

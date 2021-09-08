@@ -5,3 +5,9 @@ click
 pyrfc3339
 pyotp
 awscli
+structlog
+retrying
+tzlocal
+natural
+
+selenium
