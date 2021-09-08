@@ -54,7 +54,6 @@ flake8-sql
 flake8-spellcheck
 flake8-string-format
 flake8-variables-names
-flake8-walrus
 pep8-naming
 flake8-cognitive-complexity
 flake8-functions

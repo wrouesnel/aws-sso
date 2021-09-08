@@ -12,12 +12,8 @@ KEYRING_AWS_PORTAL_DEFAULT = "aws_sso:aws_sso:portal"
 KEYRING_SERVICE = "aws_sso:aws:access:{location}"
 CACHED_SERVICE = "aws_sso:aws:cache"
 
+DEFAULT_LOG_LEVEL = "info"
+DEFAULT_LOG_FORMAT = "kv"
+DEFAULT_LOG_DEST = "stderr"
 
-
-# UUIDs for identitying the request within the app and within the service
-REQUEST_ID = "request_id"
-LOCAL_ID = "local_id"
-
-# Boolean value which is set to true if an incoming request appears to come from
-# another service.
-INTERNAL_REQUEST = "internal_request"
+AWS_PORTAL_BASEURL = "https://portal.sso.us-east-1.amazonaws.com"

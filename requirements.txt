@@ -9,5 +9,11 @@ structlog
 retrying
 tzlocal
 natural
-
+requests_toolbelt
 selenium
+furl
+tabulate
+ruamel.yaml
+colorama
+marshmallow
+marshmallow-dataclass

@@ -1,2 +1,5 @@
+"""Implements common global logging with structlog."""
+from ._logging import configure_logging, get_logger, getLogger  # noqa F401
+from ._click import logging_options
 
-from .logging import configure_logging, get_logger, getLogger  # noqa F401
+__all__ = ["configure_logging", "get_logger", "getLogger", "logging_options"]

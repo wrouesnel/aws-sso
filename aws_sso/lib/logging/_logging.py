@@ -1,14 +1,24 @@
+"""Internal implementation of logging configuration."""
+from typing import Callable
 
-import sys
-import os
-import logging
-import structlog
 import json
+import sys
+import logging
 
-from .. import constants
+import structlog
 
-_log_level = os.environ.get("LOG_LEVEL", "info")
-_debug_logs = os.environ.get("LOG_FORMAT", "json")
+_LOG_FORMATS = {
+    "kv": structlog.processors.KeyValueRenderer(
+        key_order=["event"], drop_missing=True, sort_keys=True,
+    ),
+    "json": structlog.processors.JSONRenderer(serializer=json.dumps),
+}
+
+_LOG_TARGETS = {
+    "stdout": sys.stdout,
+    "stderr": sys.stderr,
+    "unknown": sys.stderr,
+}
 
 # class StructlogHandler(logging.Handler):
 #     """
@@ -25,14 +35,14 @@ _debug_logs = os.environ.get("LOG_FORMAT", "json")
 _logging_configured = False
 
 
-def configure_logging():
+def configure_logging(log_level: str, log_format: str, log_dest: str) -> None:
+    """Run once logging configuration."""
     global _logging_configured
-    global _log_level
-    # Note: this is here because logging is weird and Python is GIL'd.
+
     if _logging_configured is True:
         return
 
-    structlog.configure_once(
+    structlog.configure(
         processors=[
             structlog.stdlib.filter_by_level,
             structlog.stdlib.add_logger_name,
@@ -44,49 +54,39 @@ def configure_logging():
             structlog.processors.UnicodeDecoder(),
             structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
         ],
-        # IMPORTANT: THREAD LOCAL IS A HACK. IT WORKS FOR FLASK. IT'LL BE WEIRD IF YOU'RE NOT IN FLASK
-        context_class=structlog.threadlocal.wrap_dict(dict),
         logger_factory=structlog.stdlib.LoggerFactory(),
         wrapper_class=structlog.stdlib.BoundLogger,
         cache_logger_on_first_use=True,
     )
 
     pre_chain = [
-        # Add the log level and a timestamp to the event_dict if the log entry
+        # Add the logger name, log level and a timestamp to the event_dict if the log entry
         # is not from structlog.
+        structlog.stdlib.add_logger_name,
         structlog.stdlib.add_log_level,
         structlog.processors.format_exc_info,
         structlog.processors.TimeStamper(fmt="iso"),
     ]
 
-    # The rules: all logs go to stdout and all logs are formatted as JSON.
-    if _debug_logs.lower() == "kv" or _debug_logs.lower() == "keyvalue":
-        processor = structlog.processors.KeyValueRenderer(
-            key_order=["event", constants.REQUEST_ID, constants.LOCAL_ID],
-            drop_missing=True,
-            sort_keys=True,
-        )
-    else:
-        processor = structlog.processors.JSONRenderer(serializer=json.dumps)
+    processor = _LOG_FORMATS.get(log_format, "unknown")
+
     formatter = structlog.stdlib.ProcessorFormatter(
-        processor=processor, foreign_pre_chain=pre_chain
+        processor=processor, foreign_pre_chain=pre_chain,
     )
 
-    handler = logging.StreamHandler(sys.stdout)
+    handler = logging.StreamHandler(_LOG_TARGETS.get(log_dest, "unknown"))
     handler.setFormatter(formatter)
 
     root_logger = logging.getLogger()
     root_logger.handlers = [handler]
-    root_logger.setLevel(logging._nameToLevel[_log_level.upper()])
+    root_logger.setLevel(logging._nameToLevel[log_level.upper()])
 
-    root_logger.info("Logging configured")
+    root_logger.debug(f"Logging configured: {log_level} {log_format} {log_dest}")
 
     _logging_configured = True
 
 
-configure_logging()
-
-get_logger = structlog.get_logger
+get_logger: Callable[..., structlog.BoundLogger] = structlog.get_logger
 """
 Alias get_logger in structlog to encourage structlog usage.
 """
