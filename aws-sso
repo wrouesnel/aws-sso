@@ -12,6 +12,6 @@ done
 SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 cd "${SCRIPT_DIR}" || exit 1  # This is an unlikely failure, so don't worry too much.
 
-source ${SCRIPT_DIR}/active
+source "${SCRIPT_DIR}/activate"
 
 exec aws-sso "$@"

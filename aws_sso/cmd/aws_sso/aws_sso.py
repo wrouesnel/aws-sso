@@ -43,7 +43,7 @@ def _allow_prompts_callback(ctx, param, value):
 def _debug_browser_callback(ctx, param, value):
     credentials.set_show_browser(value)
 
-@click.group()
+@click.group("sso")
 @click.option("--portal", show_default=True,
               default=keyring.get_password("aws_sso:portal", "__default"),
               help="SSO portal to authenticate with")
@@ -130,7 +130,7 @@ def list_envs(portal: SSOPortal):
 
     click.echo(tabulate.tabulate(data, headers))
 
-@entrypoint.group("credentials")
+@entrypoint.group("auth")
 @click.argument("account_name", nargs=1, type=click.STRING)
 @click.argument("profile", nargs=1, type=click.STRING)
 @pass_portal
