@@ -57,7 +57,7 @@ def _debug_browser_callback(ctx, param, value):
               type=click_utils.EnumType(tabulate_utils.OutputFmt),
               callback=lambda ctx,param,value: tabulate_utils.set_output_format(value),
               help="Output Format")
-@click.option("--table-format", default="simple", is_eager=True, expose_value=False,
+@click.option("--table-format", "-T", default="simple", is_eager=True, expose_value=False,
               type=click.Choice(choices=tabulate.tabulate_formats, case_sensitive=False),
               callback=lambda ctx,param,value: tabulate_utils.set_table_format(value),
               help="Table format")
