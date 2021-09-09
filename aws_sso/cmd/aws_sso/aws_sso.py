@@ -52,7 +52,7 @@ def _debug_browser_callback(ctx, param, value):
 @click.option("--otp-secret", show_default=False, default=None, help="OTP secret to autogenerate a token for auth")
 @click.option("--cached-token/--no-cached-token", show_default=True, default=True, help="Should the web token be force refreshed?")
 # Output options
-@click.option("--output-format", "-F", default=tabulate_utils.OutputFmt.Table.value, is_eager=True, expose_value=False,
+@click.option("--output-format", "-O", default=tabulate_utils.OutputFmt.Table.value, is_eager=True, expose_value=False,
               show_default=True,
               type=click_utils.EnumType(tabulate_utils.OutputFmt),
               callback=lambda ctx,param,value: tabulate_utils.set_output_format(value),
