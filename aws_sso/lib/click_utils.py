@@ -55,3 +55,14 @@ def make_pass_decorator_with_constructor(object_type: Type[V], constructor: Call
         return functools.update_wrapper(cast(F, new_func), f)
 
     return decorator
+
+class EnumType(click.Choice):
+    def __init__(self, enum, case_sensitive=False):
+        self._enum = enum
+        super().__init__(choices=[item.value for item in enum], case_sensitive=case_sensitive)
+
+    def convert(self, value, param, ctx):
+        if isinstance(value, self._enum):
+            return value
+        converted_str = super().convert(value, param, ctx)
+        return self._enum(converted_str)

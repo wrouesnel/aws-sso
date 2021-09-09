@@ -13,15 +13,11 @@ import keyring
 import tabulate
 from structlog.threadlocal import tmp_bind
 
-from ...lib import logging, credentials, json_util
+from ...lib import logging, credentials, json_util, tabulate_utils
 from ...lib import click_utils
 from ...lib.credentials import UserPortalCredentials, get_portal
 from ...lib.keyring_utils import get_or_prompt
-
-import ruamel.yaml
-
 from ...lib.portal import SSOPortal, Profile
-from ...lib.yaml_util import SafeDataclassRepresenter
 
 logger = logging.get_logger()
 
@@ -44,16 +40,32 @@ def _debug_browser_callback(ctx, param, value):
     credentials.set_show_browser(value)
 
 @click.group("sso")
-@click.option("--portal", show_default=True,
+# Default options
+@click.option("--portal", "-h", show_default=True,
               default=keyring.get_password("aws_sso:portal", "__default"),
               help="SSO portal to authenticate with")
-@click.option("--username", show_default=True,
+@click.option("--username", "-u", show_default=True,
               default=keyring.get_password("aws_sso:portal", keyring.get_password("aws_sso:portal", "__default")),
               help="Username to authenticate to the portal")
-@click.option("--password", show_default=False, default=None, help="Password to authenticate to the portal")
+@click.option("--password", "-p", show_default=False, default=None, help="Password to authenticate to the portal")
 @click.option("--otp", show_default=False, default=None, help="OTP token (if needed) to authenticate to the portal")
 @click.option("--otp-secret", show_default=False, default=None, help="OTP secret to autogenerate a token for auth")
 @click.option("--cached-token/--no-cached-token", show_default=True, default=True, help="Should the web token be force refreshed?")
+# Output options
+@click.option("--output-format", "-F", default=tabulate_utils.OutputFmt.Table.value, is_eager=True, expose_value=False,
+              show_default=True,
+              type=click_utils.EnumType(tabulate_utils.OutputFmt),
+              callback=lambda ctx,param,value: tabulate_utils.set_output_format(value),
+              help="Output Format")
+@click.option("--table-format", default="simple", is_eager=True, expose_value=False,
+              type=click.Choice(choices=tabulate.tabulate_formats, case_sensitive=False),
+              callback=lambda ctx,param,value: tabulate_utils.set_table_format(value),
+              help="Table format")
+@click.option("--table-headers/--no-table-headers", is_eager=True, expose_value=False,
+              default=True, show_default=True,
+              callback=lambda ctx,param,value: tabulate_utils.set_headers(value),
+              help="Include headers in table outputs")
+# Debug options
 @click.option("--allow-prompts/--no-prompts", show_default=True, default=True, is_eager=True,
               callback=_allow_prompts_callback, expose_value=False,
               help="Disallow prompting for input - fail instead")
@@ -68,7 +80,7 @@ def entrypoint(ctx,
                password: Optional[str],
                otp: Optional[str],
                otp_secret: Optional[str],
-               cached_token: bool
+               cached_token: bool,
                ):
     log = logging.get_logger()
 
@@ -111,7 +123,7 @@ def list_consoles(portal: SSOPortal):
                 profile.management_console_url
             ))
 
-    click.echo(tabulate.tabulate(data, headers))
+    click.echo(tabulate_utils.tabulate(data, headers))
 
 @list.command("profiles")
 @pass_portal
@@ -128,7 +140,7 @@ def list_envs(portal: SSOPortal):
                 app.account_id,
             ))
 
-    click.echo(tabulate.tabulate(data, headers))
+    click.echo(tabulate_utils.tabulate(data, headers))
 
 @entrypoint.group("auth")
 @click.argument("account_name", nargs=1, type=click.STRING)

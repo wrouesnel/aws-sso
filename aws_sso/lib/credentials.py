@@ -2,17 +2,12 @@
 Handles the grunt-work of getting the complete suite of credentials off of an AWS portal page
 """
 import json
-import operator
 import time
 from dataclasses import dataclass, field
 from typing import Optional, Any, Dict, Tuple
 
-import click
 import keyring
-import requests
 import retrying
-import selenium.webdriver
-import structlog
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Firefox
@@ -20,15 +15,9 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
 
 import pyotp
-from selenium.webdriver.remote.webelement import WebElement
 
 from aws_sso.lib.constants import AWS_PORTAL_BASEURL
 from aws_sso.lib.requests_utils import BaseUrlSession
-
-from furl import furl
-
-from collections import defaultdict
-
 from . import logging
 from .portal import SSOPortal
 
