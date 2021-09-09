@@ -17,3 +17,4 @@ ruamel.yaml
 colorama
 marshmallow
 marshmallow-dataclass
+ilock

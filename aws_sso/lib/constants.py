@@ -17,3 +17,5 @@ DEFAULT_LOG_FORMAT = "kv"
 DEFAULT_LOG_DEST = "stderr"
 
 AWS_PORTAL_BASEURL = "https://portal.sso.us-east-1.amazonaws.com"
+
+KEYRING_LOCK_NAME = "aws-sso-keyring-access"

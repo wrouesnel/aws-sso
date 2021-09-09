@@ -2,8 +2,30 @@
 import json
 from typing import Optional, Any
 
+import ilock
 import keyring
 from . import click_utils
+
+from .constants import KEYRING_LOCK_NAME
+
+"""
+The temptation is to use keyring from multiple processes. The SecretService on Linux
+tends to have DBus race issues with this, which then makes everything else kind of
+slow. To fix this - we add our own concept of a global lock when interfacing with keyring.
+This is implemented by monkey-patching the set/get routines.
+"""
+_get_password = keyring.get_password
+_set_password = keyring.set_password
+
+def get_password(service: str, username: str):
+    with ilock.ILock(KEYRING_LOCK_NAME):
+        result = _get_password(service, username)
+    return result
+
+def set_password(service: str, username: str, password: str):
+    with ilock.ILock(KEYRING_LOCK_NAME):
+        result = _set_password(service, username, password)
+    return result
 
 def get_or_prompt(value: Optional[str], service: str, user: str):
     # If got a value, then pass that back
