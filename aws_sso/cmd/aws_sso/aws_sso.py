@@ -61,7 +61,7 @@ def _debug_browser_callback(ctx, param, value):
               type=click.Choice(choices=tabulate.tabulate_formats, case_sensitive=False),
               callback=lambda ctx,param,value: tabulate_utils.set_table_format(value),
               help="Table format")
-@click.option("--table-headers/--no-table-headers", is_eager=True, expose_value=False,
+@click.option("--table-headers/--no-table-headers", " /-N", is_eager=True, expose_value=False,
               default=True, show_default=True,
               callback=lambda ctx,param,value: tabulate_utils.set_headers(value),
               help="Include headers in table outputs")
