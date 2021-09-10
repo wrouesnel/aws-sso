@@ -36,3 +36,10 @@ aws-sso auth ${account_name} ${account_profile} exec -- aws codecommit list-repo
 ```
 
 You will still need to configure region parameters.
+
+# Known Issues
+
+The DBus keyring integration is not the most reliable thing. Attempting to use this system
+with lots of subcommands is likely to lead to keyring access failurs which will lead to
+command failures. Effort has been made to mitigate this, but it's an issue with the underlying
+subsystems - try and use parallel scripts which only sequentially request credentials.
