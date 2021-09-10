@@ -12,7 +12,7 @@ KEYRING_AWS_PORTAL_DEFAULT = "aws_sso:aws_sso:portal"
 KEYRING_SERVICE = "aws_sso:aws:access:{location}"
 CACHED_SERVICE = "aws_sso:aws:cache"
 
-DEFAULT_LOG_LEVEL = "info"
+DEFAULT_LOG_LEVEL = "warning"
 DEFAULT_LOG_FORMAT = "console"
 DEFAULT_LOG_DEST = "stderr"
 
