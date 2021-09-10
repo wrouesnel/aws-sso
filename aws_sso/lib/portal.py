@@ -61,7 +61,7 @@ class Profile():
 
     def credentials(self) -> Dict[str,str]:
         # Check if credentials are already cached in the keyring
-        cache_key = f"aws_sso:portal:credentials:{self._portal.portal}:{self._portal.username}"
+        cache_key = f"aws_sso:portal:credentials:{self._portal.portal}:{self._portal.username}:{self._appinstance.account_name}"
         creds = keyring_utils.get_json_or_none(cache_key, self.name)
         if creds is not None:
             if time.time() < (creds.get("expiration") / 1000):
@@ -102,7 +102,7 @@ class Profiles(collections.Mapping):
         self._profiles: Dict[str,Profile] = {}
 
         self._updated_time = 0
-        self._cache_key = f"aws_sso:portal:appinstance:profile:{self._portal.portal}:{self._appinstance.account_name}"
+        self._cache_key = f"aws_sso:portal:appinstance:profile:{self._portal.portal}:{self._portal.username}:{self._appinstance.account_name}"
 
     def _get_profiles(self):
         if self._updated_time == 0:
