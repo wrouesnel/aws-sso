@@ -13,7 +13,7 @@ import keyring
 import tabulate
 from structlog.threadlocal import tmp_bind
 
-from ...lib import logging, credentials, json_util, tabulate_utils
+from ...lib import logging, credentials, json_util, tabulate_utils, keyring_utils
 from ...lib import click_utils
 from ...lib.credentials import UserPortalCredentials, get_portal
 from ...lib.keyring_utils import get_or_prompt
