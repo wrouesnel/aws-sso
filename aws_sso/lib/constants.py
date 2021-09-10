@@ -13,7 +13,7 @@ KEYRING_SERVICE = "aws_sso:aws:access:{location}"
 CACHED_SERVICE = "aws_sso:aws:cache"
 
 DEFAULT_LOG_LEVEL = "info"
-DEFAULT_LOG_FORMAT = "kv"
+DEFAULT_LOG_FORMAT = "console"
 DEFAULT_LOG_DEST = "stderr"
 
 AWS_PORTAL_BASEURL = "https://portal.sso.us-east-1.amazonaws.com"

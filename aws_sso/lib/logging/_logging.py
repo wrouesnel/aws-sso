@@ -8,6 +8,7 @@ import logging
 import structlog
 
 _LOG_FORMATS = {
+    "console" : structlog.dev.ConsoleRenderer(),
     "kv": structlog.processors.KeyValueRenderer(
         key_order=["event"], drop_missing=True, sort_keys=True,
     ),
