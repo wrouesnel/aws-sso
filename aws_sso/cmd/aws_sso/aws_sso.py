@@ -149,15 +149,15 @@ def list_envs(portal: SSOPortal):
 @click.pass_context
 def cli_credentials(ctx, portal: SSOPortal, account_name:str, profile:str):
     """Invoke AWS operations within an account as a role"""
-    ctx.obj = portal.appinstances[account_name].profiles[profile]
+    o = portal.appinstances[account_name].profiles[profile]
+    ctx.obj = o
 
 @cli_credentials.command("env")
 @pass_profile
 def credentials_env(profile: Profile):
     """Emit access credentials on stdout as shell sourceable"""
-    creds = profile.credentials()
-
-    for key, value in sorted(profile.env_format_credentials().items()):
+    creds = profile.env_format_credentials()
+    for key, value in sorted(creds.items()):
         click.echo(f"export {key}=\"{value}\"")
 
 @cli_credentials.command("exec")
