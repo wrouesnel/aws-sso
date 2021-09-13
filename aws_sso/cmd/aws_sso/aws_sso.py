@@ -167,7 +167,7 @@ def context_call(profile: Profile, cmd):
     """invoke a command with the requested AWS context"""
     env = os.environ.copy()
     env.update(profile.env_format_credentials())
-    p = subprocess.Popen(cmd, env=env)
+    p = subprocess.Popen(cmd, env=env, cwd=os.path.realpath(os.curdir))
     p.wait()
     sys.exit(p.returncode)
 
