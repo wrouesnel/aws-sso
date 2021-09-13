@@ -89,6 +89,8 @@ class Profile():
     def env_format_credentials(self) -> Dict[str,str]:
         creds = self.credentials()
         return {
+            "AWS_ACCOUNT_EMAIL": self._appinstance.account_email,
+            "AWS_ACCOUNT_NAME": self._appinstance.account_name,
             "AWS_ACCOUNT_ID": creds["accountId"],
             "AWS_ACCESS_KEY_ID": creds["accessKeyId"],
             "AWS_SECRET_ACCESS_KEY": creds["secretAccessKey"],
