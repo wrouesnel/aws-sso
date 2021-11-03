@@ -45,8 +45,8 @@ fi
 
 log "Checking for virtualenv"
 if [ ! -d venv ]; then
-    if ! virtualenv -p python3.8 venv ; then
-        fatal 1 "Could not setup a python 3.8 virtual environment."
+    if ! virtualenv -p python3 venv ; then
+        fatal 1 "Could not setup a python 3 virtual environment."
     fi
 fi
 
