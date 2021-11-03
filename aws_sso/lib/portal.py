@@ -88,13 +88,23 @@ class Profile():
 
     def env_format_credentials(self) -> Dict[str,str]:
         creds = self.credentials()
+
+        accountId = creds["accountId"]
+        accessKeyId = creds["accessKeyId"]
+        secretAccessKey = creds["secretAccessKey"]
+        sessionToken = creds["sessionToken"]
+
         return {
             "AWS_ACCOUNT_EMAIL": self._appinstance.account_email,
             "AWS_ACCOUNT_NAME": self._appinstance.account_name,
-            "AWS_ACCOUNT_ID": creds["accountId"],
-            "AWS_ACCESS_KEY_ID": creds["accessKeyId"],
-            "AWS_SECRET_ACCESS_KEY": creds["secretAccessKey"],
-            "AWS_SESSION_TOKEN": creds["sessionToken"],
+            "AWS_ACCOUNT_ID": accountId,
+            "AWS_ACCESS_KEY_ID": accessKeyId,
+            "AWS_SECRET_ACCESS_KEY": secretAccessKey,
+            "AWS_SESSION_TOKEN": sessionToken,
+            # Add mc tool credentials
+            f"MC_HOST_{self._appinstance.applicationName}": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
+            # Add a generic credential. This one will get overwritten by nested invocations.
+            f"MC_HOST_s3": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
         }
 
 class Profiles(collections.Mapping):
