@@ -94,18 +94,52 @@ class Profile():
         secretAccessKey = creds["secretAccessKey"]
         sessionToken = creds["sessionToken"]
 
-        return {
+        result_creds = {}
+
+        aws_creds = {
             "AWS_ACCOUNT_EMAIL": self._appinstance.account_email,
             "AWS_ACCOUNT_NAME": self._appinstance.account_name,
             "AWS_ACCOUNT_ID": accountId,
             "AWS_ACCESS_KEY_ID": accessKeyId,
             "AWS_SECRET_ACCESS_KEY": secretAccessKey,
             "AWS_SESSION_TOKEN": sessionToken,
+        }
+
+        result_creds.update(aws_creds)
+
+        mc_creds = {
             # Add mc tool credentials
-            f"MC_HOST_{self._appinstance.applicationName}": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
+            f"MC_HOST_{self._appinstance.account_name}": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
             # Add a generic credential. This one will get overwritten by nested invocations.
             f"MC_HOST_s3": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
         }
+
+        result_creds.update(mc_creds)
+
+        rclone_acctname = self._appinstance.account_name.upper().replace("-","")
+
+        rclone_creds = {
+            # Add rclone credentials
+            f"RCLONE_CONFIG_{rclone_acctname}_TYPE": "s3",
+            f"RCLONE_CONFIG_{rclone_acctname}_PROVIDER": "AWS",
+            f"RCLONE_CONFIG_{rclone_acctname}_ACCESS_KEY_ID": accessKeyId,
+            f"RCLONE_CONFIG_{rclone_acctname}_SECRET_ACCESS_KEY": secretAccessKey,
+            f"RCLONE_CONFIG_{rclone_acctname}_SESSION_TOKEN": sessionToken,
+        }
+
+        result_creds.update(rclone_creds)
+
+        rclone_general_creds = {
+            "RCLONE_CONFIG_S3_TYPE": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_TYPE"],
+            "RCLONE_CONFIG_S3_PROVIDER": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_PROVIDER"],
+            "RCLONE_CONFIG_S3_ACCESS_KEY_ID": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_ACCESS_KEY_ID"],
+            "RCLONE_CONFIG_S3_SECRET_ACCESS_KEY": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_SECRET_ACCESS_KEY"],
+            "RCLONE_CONFIG_S3_SESSION_TOKEN": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_SESSION_TOKEN"],
+        }
+
+        result_creds.update(rclone_general_creds)
+
+        return result_creds
 
 class Profiles(collections.Mapping):
     def __init__(self, portal: "SSOPortal", appinstance: "AppInstance"):

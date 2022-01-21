@@ -4,6 +4,7 @@
 import dataclasses
 import json
 import os
+import signal
 import subprocess
 import sys
 from typing import Optional, Any
@@ -167,8 +168,27 @@ def context_call(profile: Profile, cmd):
     """invoke a command with the requested AWS context"""
     env = os.environ.copy()
     env.update(profile.env_format_credentials())
-    p = subprocess.Popen(cmd, env=env, cwd=os.path.realpath(os.curdir))
+
+    p = subprocess.Popen(cmd,
+                         env=env,
+                         cwd=os.path.realpath(os.curdir),
+                         stdin=sys.stdin,
+                         stderr=sys.stderr,
+                         stdout=sys.stdout)
+
+    # Attach all signals and forward them to the subprocess
+    def sighandler(signum, stack):
+        p.send_signal(signum)
+
+    for i in [x for x in dir(signal) if x.startswith("SIG")]:
+        try:
+            signum = getattr(signal, i)
+            signal.signal(signum, sighandler)
+        except (OSError, RuntimeError, ValueError) as m:  # OSError for Python3, RuntimeError for 2
+            #print("Skipping {}".format(i))
+            pass
     p.wait()
+
     sys.exit(p.returncode)
 
 @entrypoint.group("debug")
