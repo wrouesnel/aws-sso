@@ -11,7 +11,7 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-pushd "$SCRIPT_DIR" || exit 1
+pushd "$SCRIPT_DIR" > /dev/null || exit 1
 source "${SCRIPT_DIR}/activate"
-popd "$_CURDIR" || exit 1
+popd > /dev/null || exit 1
 exec aws-sso "$@"
