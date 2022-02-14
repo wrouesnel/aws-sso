@@ -21,7 +21,7 @@ with open("requirements.txt", "rt") as f:
 
 setup(
     name="aws_sso",
-    version="0.0.0",
+    version="0.0.1",
     description="AWS SSO Portal Helper",
     author="Will Rouesnel <wrouesnel@wrouesnel.com>",
     py_modules=find_packages("."),
