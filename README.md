@@ -6,6 +6,12 @@ To get started ensure you have a supported Python `keyring` backend working (i.e
 Ubuntu), Firefox and the Selenium webdriver executable installed in your path (geckodriver - download
 for your platform from here https://github.com/mozilla/geckodriver/releases)
 
+## Installation
+
+This is fairly bespoke tool, and I recommend installing it as a virtualenv package. This can be accomplished
+by cloning this repo and then running the `autogen.sh` script, and then symlinking the `aws-sso` bash script
+into your path.
+
 ## Basic Usage
 
 To perform initial setup, run a command like `aws-sso list profiles`. This command will prompt
@@ -43,3 +49,5 @@ The DBus keyring integration is not the most reliable thing. Attempting to use t
 with lots of subcommands is likely to lead to keyring access failurs which will lead to
 command failures. Effort has been made to mitigate this, but it's an issue with the underlying
 subsystems - try and use parallel scripts which only sequentially request credentials.
+
+The Selenium implementation is Firefox specific and I have not tested it with anything else.
