@@ -19,3 +19,5 @@ DEFAULT_LOG_DEST = "stderr"
 AWS_PORTAL_BASEURL = "https://portal.sso.us-east-1.amazonaws.com"
 
 KEYRING_LOCK_NAME = "aws-sso-keyring-access"
+
+ENV_AWS_SSO_EXEC_PATH = "AWS_SSO_EXEC_PATH"

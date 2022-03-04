@@ -14,7 +14,7 @@ import keyring
 import tabulate
 from structlog.threadlocal import tmp_bind
 
-from ...lib import logging, credentials, json_util, tabulate_utils, keyring_utils
+from ...lib import logging, credentials, json_util, tabulate_utils, keyring_utils, constants
 from ...lib import click_utils
 from ...lib.credentials import UserPortalCredentials, get_portal
 from ...lib.keyring_utils import get_or_prompt
@@ -167,6 +167,12 @@ def credentials_env(profile: Profile):
 def context_call(profile: Profile, cmd):
     """invoke a command with the requested AWS context"""
     env = os.environ.copy()
+
+    if constants.ENV_AWS_SSO_EXEC_PATH in env:
+        logger.debug("Found original path variabel - replacing path in environment")
+        env["PATH"] = env[constants.ENV_AWS_SSO_EXEC_PATH]
+        del env[constants.ENV_AWS_SSO_EXEC_PATH]
+
     env.update(profile.env_format_credentials())
 
     p = subprocess.Popen(cmd,
