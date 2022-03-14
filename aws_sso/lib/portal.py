@@ -1,6 +1,7 @@
 import base64
 import collections
 import json
+import os
 import time
 from typing import Dict, Mapping, Optional, Any
 
@@ -107,11 +108,16 @@ class Profile():
 
         result_creds.update(aws_creds)
 
+        s3_endpoint = "s3.amazonaws.com"
+        s3_region = os.environ.get("AWS_REGION", os.environ.get("AWS_DEFAULT_REGION", None))
+        if s3_region is not None:
+            s3_endpoint = f"{s3_region}.{s3_endpoint}"
+
         mc_creds = {
             # Add mc tool credentials
             f"MC_HOST_{self._appinstance.account_name}": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
             # Add a generic credential. This one will get overwritten by nested invocations.
-            f"MC_HOST_s3": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
+            f"MC_HOST_s3": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@{s3_endpoint}",
         }
 
         result_creds.update(mc_creds)
