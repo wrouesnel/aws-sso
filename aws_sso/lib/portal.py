@@ -100,6 +100,7 @@ class Profile():
         aws_creds = {
             "AWS_ACCOUNT_EMAIL": self._appinstance.account_email,
             "AWS_ACCOUNT_NAME": self._appinstance.account_name,
+            "AWS_ACCOUNT_PROFILE": self.name,
             "AWS_ACCOUNT_ID": accountId,
             "AWS_ACCESS_KEY_ID": accessKeyId,
             "AWS_SECRET_ACCESS_KEY": secretAccessKey,
