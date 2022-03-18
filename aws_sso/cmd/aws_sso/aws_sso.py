@@ -169,7 +169,7 @@ def context_call(profile: Profile, cmd):
     env = os.environ.copy()
 
     if constants.ENV_AWS_SSO_EXEC_PATH in env:
-        logger.debug("Found original path variabel - replacing path in environment")
+        logger.debug("Found original path variable - replacing path in environment")
         env["PATH"] = env[constants.ENV_AWS_SSO_EXEC_PATH]
         del env[constants.ENV_AWS_SSO_EXEC_PATH]
 
