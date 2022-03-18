@@ -111,7 +111,8 @@ class Profile():
         s3_endpoint = "s3.amazonaws.com"
         s3_region = os.environ.get("AWS_REGION", os.environ.get("AWS_DEFAULT_REGION", None))
         if s3_region is not None:
-            s3_endpoint = f"{s3_region}.{s3_endpoint}"
+            if len(s3_region) > 0:
+                s3_endpoint = f"{s3_region}.{s3_endpoint}"
 
         mc_creds = {
             # Add mc tool credentials
