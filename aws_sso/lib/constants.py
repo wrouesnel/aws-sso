@@ -20,4 +20,6 @@ AWS_PORTAL_BASEURL = "https://portal.sso.us-east-1.amazonaws.com"
 
 KEYRING_LOCK_NAME = "aws-sso-keyring-access"
 
+# This environment variable is used as the PATH to restore instead of whatever aws-sso was launched
+# with. This is mostly useful when using wrapper scripts to launch aws-sso from virtualenv.
 ENV_AWS_SSO_EXEC_PATH = "AWS_SSO_EXEC_PATH"
