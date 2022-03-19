@@ -133,6 +133,7 @@ class Profile():
             f"RCLONE_CONFIG_{rclone_acctname}_ACCESS_KEY_ID": accessKeyId,
             f"RCLONE_CONFIG_{rclone_acctname}_SECRET_ACCESS_KEY": secretAccessKey,
             f"RCLONE_CONFIG_{rclone_acctname}_SESSION_TOKEN": sessionToken,
+            f"RCLONE_CONFIG_{rclone_acctname}_REGION": s3_region,
         }
 
         result_creds.update(rclone_creds)
@@ -143,6 +144,7 @@ class Profile():
             "RCLONE_CONFIG_S3_ACCESS_KEY_ID": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_ACCESS_KEY_ID"],
             "RCLONE_CONFIG_S3_SECRET_ACCESS_KEY": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_SECRET_ACCESS_KEY"],
             "RCLONE_CONFIG_S3_SESSION_TOKEN": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_SESSION_TOKEN"],
+            "RCLONE_CONFIG_S3_REGION": rclone_creds[f"RCLONE_CONFIG_{rclone_acctname}_REGION"],
         }
 
         result_creds.update(rclone_general_creds)
