@@ -119,7 +119,7 @@ class Profile():
             # Add mc tool credentials
             f"MC_HOST_{self._appinstance.account_name}": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
             # Add a generic credential. This one will get overwritten by nested invocations.
-            f"MC_HOST_s3": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@{s3_endpoint}",
+            f"MC_HOST_s3": f"https://{accessKeyId}:{secretAccessKey}:{sessionToken}@s3.amazonaws.com",
         }
 
         result_creds.update(mc_creds)
