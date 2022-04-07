@@ -173,6 +173,11 @@ def context_call(profile: Profile, cmd):
         env["PATH"] = env[constants.ENV_AWS_SSO_EXEC_PATH]
         del env[constants.ENV_AWS_SSO_EXEC_PATH]
 
+    if constants.ENV_AWS_SSO_VENV_PATH in env:
+        logger.debug("Found original virtualenv variable - replacing path in environment")
+        env["VIRTUAL_ENV"] = env[constants.ENV_AWS_SSO_VENV_PATH]
+        del env[constants.ENV_AWS_SSO_VENV_PATH]
+
     env.update(profile.env_format_credentials())
 
     p = subprocess.Popen(cmd,
