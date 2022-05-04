@@ -25,6 +25,7 @@ logger = logging.get_logger()
 
 _show_browser = False
 def set_show_browser(value: bool):
+    global _show_browser
     _show_browser = value
 
 @dataclass
@@ -68,6 +69,7 @@ def _get_sso_credentials(creds: UserPortalCredentials, force:bool=False) -> Tupl
         logger.debug("Portal is being forced to reauth")
 
     opts = Options()
+    global _show_browser
     opts.headless = False if _show_browser else True
     logger.debug("Starting Selenium session", headless=opts.headless)
     should_force = True if force else creds.force

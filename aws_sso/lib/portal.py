@@ -151,7 +151,7 @@ class Profile():
 
         return result_creds
 
-class Profiles(collections.Mapping):
+class Profiles(Mapping):
     def __init__(self, portal: "SSOPortal", appinstance: "AppInstance"):
         self._portal = portal
         self._appinstance = appinstance
@@ -231,7 +231,7 @@ class AppInstance():
     def profiles(self) -> Mapping[str,Profile]:
         return Profiles(self._portal, self)
 
-class AppInstances(collections.Mapping):
+class AppInstances(Mapping):
     """Dictionary-like container which provides access to the app instances"""
     def __init__(self, portal):
         self._portal = portal
